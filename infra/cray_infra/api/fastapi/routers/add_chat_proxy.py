@@ -60,6 +60,10 @@ def add_chat_proxy(app: FastAPI):
             },
         )
 
+    @app.get("/")
+    async def root():
+        return RedirectResponse(url="/chat/")
+
     @app.get("/chat")
     async def chat_root():
         return RedirectResponse(url="/chat/")

@@ -1,10 +1,12 @@
 #include <mpi.h>
 #include <torch/extension.h>
+#ifdef USE_CUDA
 #include <cuda_runtime.h>
+#include <torch/cuda.h>
+#endif
 #include <stdexcept>
 #include <iostream>
 #include <tuple>
-#include <torch/cuda.h>
 
 static bool mpi_initialized = false;
 
@@ -16,6 +18,7 @@ void ensure_mpi_initialized() {
 }
 
 inline void sync_cuda_if_needed(const torch::Tensor& tensor) {
+#ifdef USE_CUDA
     if (tensor.is_cuda()) {
         cudaError_t err = cudaDeviceSynchronize();
         if (err != cudaSuccess) {
@@ -23,6 +26,7 @@ inline void sync_cuda_if_needed(const torch::Tensor& tensor) {
                                      cudaGetErrorString(err));
         }
     }
+#endif
 }
 
 inline std::tuple<MPI_Datatype, size_t> get_typesize(torch::ScalarType dtype) {

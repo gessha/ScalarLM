@@ -2,7 +2,7 @@ ARG BASE_NAME=cpu
 
 ###############################################################################
 # NVIDIA BASE IMAGE
-FROM nvcr.io/nvidia/pytorch:25.10-py3 AS nvidia
+FROM nvcr.io/nvidia/pytorch:26.01-py3 AS nvidia
 
 RUN apt-get update -y && apt-get install -y python3-venv slurm-wlm libslurm-dev
 
@@ -15,7 +15,7 @@ RUN python -m venv $VIRTUAL_ENV --system-site-packages && \
 ENV PATH=$PATH:/opt/hpcx/ompi/bin
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/opt/hpcx/ompi/lib
 
-ARG TORCH_VERSION="2.9.1"
+ARG TORCH_VERSION="2.10.0"
 ARG TORCH_CUDA_ARCH_LIST="7.5"
 
 RUN pip install uv && \
@@ -61,6 +61,10 @@ ARG INSTALL_ROOT=/app/cray
 WORKDIR ${INSTALL_ROOT}
 
 ENV BASE_NAME=cpu
+
+ENV TORCHDYNAMO_DISABLE=1
+ENV TORCHINDUCTOR_MAX_AUTOTUNE=0
+ENV TORCHINDUCTOR_COORDINATE_DESCENT_TUNING=0
 
 ###############################################################################
 # AMD BASE IMAGE

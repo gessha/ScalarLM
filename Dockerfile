@@ -16,7 +16,7 @@ ENV PATH=$PATH:/opt/hpcx/ompi/bin
 ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/opt/hpcx/ompi/lib
 
 ARG TORCH_VERSION="2.10.0"
-ARG TORCH_CUDA_ARCH_LIST="7.5"
+ARG TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0"
 
 RUN pip install uv && \
     uv pip install ninja && \
@@ -246,7 +246,7 @@ RUN --mount=type=bind,source=./vllm,target=/workspace/vllm,rw \
 WORKDIR ${INSTALL_ROOT}/vllm
 
 # Set build environment variables for CPU compilation
-ARG TORCH_CUDA_ARCH_LIST="7.5"
+ARG TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6;9.0"
 ARG VLLM_TARGET_DEVICE=cpu
 
 ENV TORCH_CUDA_ARCH_LIST=${TORCH_CUDA_ARCH_LIST}
